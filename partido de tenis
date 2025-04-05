@@ -1,0 +1,68 @@
+#Posible solucion al ejericcio 55 de https://retosdeprogramacion.com/ejercicios/
+#Escribe un programa que muestre cómo transcurre un juego de tenis y quién lo ha ganado.
+# * El programa recibirá una secuencia formada por "P1" (Player 1) o "P2" (Player 2), según quien
+# * gane cada punto del juego.
+# *
+# * - Las puntuaciones de un juego son "Love" (cero), 15, 30, 40, "Deuce" (empate), ventaja.
+# * - Ante la secuencia [P1, P1, P2, P2, P1, P2, P1, P1], el programa mostraría lo siguiente:
+# *   15 - Love
+# *   30 - Love
+# *   30 - 15
+# *   30 - 30
+# *   40 - 30
+# *   Deuce
+# *   Ventaja P1
+# *   Ha ganado el P1
+# * - Si quieres, puedes controlar errores en la entrada de datos.
+# * - Consulta las reglas del juego si tienes dudas sobre el sistema de puntos.
+
+def tenis(juego):
+    # Declaramos las variables
+    puntuacion = ["Love", "15", "30", "40"]
+    jugador_1 = 0
+    jugador_2 = 0
+    
+    # Validar los datos de entrada
+    def validar_juego(juego):
+        for punto in juego:
+            if punto not in ["P1", "P2"]:
+                print("Error: Los datos introducidos son incorrectos.")
+                return False
+        return True
+
+    if not validar_juego(juego):
+        return  # Salimos si los datos no son válidos
+
+    # Fase normal del juego (hasta 40 o Deuce)
+    for punto in juego:
+        jugador_1 += (punto == "P1")
+        jugador_2 += (punto == "P2")
+
+        if jugador_1 == jugador_2 == 3:
+            print("Deuce")
+            break  # Salimos porque entramos en la fase de ventaja
+        
+        if jugador_1 > 3 and jugador_2 < 3:
+            print("Jugador 1 ha ganado el juego")
+            return
+        if jugador_2 > 3 and jugador_1 < 3:
+            print("Jugador 2 ha ganado el juego")
+            return
+
+        print(f"{puntuacion[jugador_1]} - {puntuacion[jugador_2]}")
+    
+    # Fase de ventaja o Deuce (cuando ambos llegan a 40)
+    for punto in juego[jugador_1 + jugador_2 - 6:]:  # Continuamos desde donde quedó
+        jugador_1 += (punto == "P1")
+        jugador_2 += (punto == "P2")
+
+        if jugador_1 - jugador_2 == 1:
+            print("Ventaja Jugador 1")
+        elif jugador_1 - jugador_2 == -1:
+            print("Ventaja Jugador 2")
+        elif jugador_1 == jugador_2:
+            print("Deuce")
+
+        if abs(jugador_1 - jugador_2) == 2:
+            print(f"Jugador {1 if jugador_1 > jugador_2 else 2} ha ganado el juego")
+            return
