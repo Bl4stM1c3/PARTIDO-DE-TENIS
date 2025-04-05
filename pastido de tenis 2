@@ -1,0 +1,67 @@
+#Posible solucion al ejericcio 55 de https://retosdeprogramacion.com/ejercicios/
+#Escribe un programa que muestre cómo transcurre un juego de tenis y quién lo ha ganado.
+# * El programa recibirá una secuencia formada por "P1" (Player 1) o "P2" (Player 2), según quien
+# * gane cada punto del juego.
+# *
+# * - Las puntuaciones de un juego son "Love" (cero), 15, 30, 40, "Deuce" (empate), ventaja.
+# * - Ante la secuencia [P1, P1, P2, P2, P1, P2, P1, P1], el programa mostraría lo siguiente:
+# *   15 - Love
+# *   30 - Love
+# *   30 - 15
+# *   30 - 30
+# *   40 - 30
+# *   Deuce
+# *   Ventaja P1
+# *   Ha ganado el P1
+# * - Si quieres, puedes controlar errores en la entrada de datos.
+# * - Consulta las reglas del juego si tienes dudas sobre el sistema de puntos.
+
+'''RESOLVEMOS MEDIANTE BUCLES WHILE'''
+
+def tenis(juego):
+    #Declaramos las variables
+    puntuacion = ["Love", "15", "30", "40"] 
+    jugador_1 = 0
+    jugador_2 = 0
+    index = 0
+    
+    def validar_juego(juego):
+        for punto in juego:
+            if punto not in ["P1", "P2"]:
+                return "Los datos introducidos en la funcion son incorrectos\n'P1' para los puntos del jugador 1\n'P2' para los puntos del jugador 2"
+            
+        return True
+    
+    if validar_juego(juego):
+        
+        #Juego fase normal: saldremos de este bucle cuando ambos contadores lleguen a 3
+        while not (jugador_1 == 3 and jugador_2 == 3) and index < len(juego):
+            punto = juego[index]
+            jugador_1 += (punto == "P1")
+            jugador_2 += (punto == "P2")
+            
+            if jugador_1 == jugador_2 == 3:
+                print("Deuce")
+            elif jugador_1 > 3 and jugador_2 < 3:
+                print("Jugador 1 ha ganado el juego")
+            elif jugador_1 < 3 and jugador_2 > 3:
+                print("Jugador 2 ha ganado el juego")
+            else:
+                print(f"{puntuacion[jugador_1]} - {puntuacion[jugador_2]}")
+                
+            index += 1
+            
+        #Juego fase empate/ventaja       
+        while min(jugador_1, jugador_2) >= 3 and index < len(juego):
+            punto = juego[index]
+            jugador_1 += (punto == "P1")
+            jugador_2 += (punto == "P2")
+            
+            if abs(jugador_1 - jugador_2) == 2:
+                print(f"Jugador{1 if jugador_1 > jugador_2 else 2} ha ganado el juego")
+                return
+            print("Ventaja jugador 1" if jugador_1 > jugador_2 else "Ventaja jugador 2" if jugador_1 < jugador_2 else "Deuce")
+            index += 1
+                
+            
+    print(validar_juego(juego))
